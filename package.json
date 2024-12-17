@@ -1,0 +1,30 @@
+{
+  "name": "aave-rates",
+  "version": "1.0.0",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "serve": "node --env-file=.env server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pawiromitchel/aave-rates.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/pawiromitchel/aave-rates/issues"
+  },
+  "homepage": "https://github.com/pawiromitchel/aave-rates#readme",
+  "description": "",
+  "dependencies": {
+    "@aave/contract-helpers": "^1.30.5",
+    "@aave/math-utils": "^1.30.5",
+    "@bgd-labs/aave-address-book": "^4.7.0",
+    "@fastify/static": "^8.0.3",
+    "fastify": "^5.2.0",
+    "install": "^0.13.0",
+    "npm": "^10.9.2"
+  }
+}

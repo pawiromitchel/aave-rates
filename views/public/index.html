@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>APY Data Overview</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body>
+    <section class="text-gray-600 body-font">
+        <div class="container px-5 py-24 mx-auto">
+            <div class="flex flex-col text-center w-full mb-10">
+                <h1 class="sm:text-4xl text-3xl font-medium title-font mb-2 text-indigo-600">Aave APY Data Overview</h1>
+                <p class="lg:w-2/3 mx-auto leading-relaxed text-base">
+                    View the Supply and Borrow APY across various chains for USDC, USDT, and WETH.
+                </p>
+            </div>
+
+            <!-- Highest Supply APY Table -->
+            <div class="text-center mb-8">
+                <h3 class="text-2xl font-semibold mb-3 text-gray-900">Highest Supply APY</h3>
+                <div class="lg:w-2/3 w-full mx-auto overflow-auto">
+                    <table class="table-auto w-full text-left whitespace-no-wrap">
+                        <thead>
+                            <tr>
+                                <th class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100 rounded-tl rounded-bl">Token</th>
+                                <th class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">Chain</th>
+                                <th class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100 rounded-tr rounded-br">Highest Supply APY</th>
+                            </tr>
+                        </thead>
+                        <tbody id="highest-apy-table">
+                            <!-- Rows will be dynamically added here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- USDC Table -->
+            <div class="text-center mb-8">
+                <h3 class="text-xl font-semibold mb-3 text-gray-900">USDC</h3>
+                <div class="lg:w-2/3 w-full mx-auto overflow-auto">
+                    <table class="table-auto w-full text-left whitespace-no-wrap">
+                        <thead>
+                            <tr>
+                                <th class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100 rounded-tl rounded-bl">Chain</th>
+                                <th class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">Supply APY</th>
+                                <th class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100 rounded-tr rounded-br">Borrow APY</th>
+                            </tr>
+                        </thead>
+                        <tbody id="usdc-table">
+                            <!-- USDC table rows will be dynamically added here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- USDT Table -->
+            <div class="text-center mb-8">
+                <h3 class="text-xl font-semibold mb-3 text-gray-900">USDT</h3>
+                <div class="lg:w-2/3 w-full mx-auto overflow-auto">
+                    <table class="table-auto w-full text-left whitespace-no-wrap">
+                        <thead>
+                            <tr>
+                                <th class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100 rounded-tl rounded-bl">Chain</th>
+                                <th class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">Supply APY</th>
+                                <th class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100 rounded-tr rounded-br">Borrow APY</th>
+                            </tr>
+                        </thead>
+                        <tbody id="usdt-table">
+                            <!-- USDT table rows will be dynamically added here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- WETH Table -->
+            <div class="text-center mb-8">
+                <h3 class="text-xl font-semibold mb-3 text-gray-900">WETH</h3>
+                <div class="lg:w-2/3 w-full mx-auto overflow-auto">
+                    <table class="table-auto w-full text-left whitespace-no-wrap">
+                        <thead>
+                            <tr>
+                                <th class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100 rounded-tl rounded-bl">Chain</th>
+                                <th class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">Supply APY</th>
+                                <th class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100 rounded-tr rounded-br">Borrow APY</th>
+                            </tr>
+                        </thead>
+                        <tbody id="weth-table">
+                            <!-- WETH table rows will be dynamically added here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        let apyData;
+
+        async function fetchData() {
+            try {
+                const response = await fetch('http://localhost:3000/rates');
+                apyData = await response.json();
+
+                // Populate tables
+                populateTable('USDC');
+                populateTable('USDT');
+                populateTable('WETH');
+
+                // Populate the highest Supply APY table
+                populateHighestSupplyAPY();
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        }
+
+        function populateTable(asset) {
+            const tableBody = document.querySelector(`#${asset.toLowerCase()}-table`);
+            tableBody.innerHTML = '';
+
+            for (const chain in apyData) {
+                const item = apyData[chain].find(i => i.symbol === asset);
+                if (item) {
+                    const row = `
+                        <tr>
+                            <td class="px-4 py-3">${chain.charAt(0).toUpperCase() + chain.slice(1)}</td>
+                            <td class="px-4 py-3">${(parseFloat(item.supplyAPY) * 100).toFixed(2)}%</td>
+                            <td class="px-4 py-3">${(parseFloat(item.variableBorrowAPY) * 100).toFixed(2)}%</td>
+                        </tr>
+                    `;
+                    tableBody.insertAdjacentHTML('beforeend', row);
+                }
+            }
+        }
+
+        function populateHighestSupplyAPY() {
+            const tableBody = document.querySelector('#highest-apy-table');
+            tableBody.innerHTML = '';
+
+            const tokens = ['USDC', 'USDT', 'WETH'];
+            tokens.forEach(token => {
+                let highestAPY = 0;
+                let highestChain = '';
+
+                for (const chain in apyData) {
+                    const item = apyData[chain].find(i => i.symbol === token);
+                    if (item && parseFloat(item.supplyAPY) > highestAPY) {
+                        highestAPY = parseFloat(item.supplyAPY);
+                        highestChain = chain.charAt(0).toUpperCase() + chain.slice(1);
+                    }
+                }
+
+                if (highestChain) {
+                    const row = `
+                        <tr>
+                            <td class="px-4 py-3">${token}</td>
+                            <td class="px-4 py-3">${highestChain}</td>
+                            <td class="px-4 py-3">${(highestAPY * 100).toFixed(2)}%</td>
+                        </tr>
+                    `;
+                    tableBody.insertAdjacentHTML('beforeend', row);
+                }
+            });
+        }
+
+        window.onload = fetchData;
+    </script>
+</body>
+
+</html>
