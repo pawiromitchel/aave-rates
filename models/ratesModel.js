@@ -1,8 +1,9 @@
 // models/ratesModel.js
 import { ChainId, UiPoolDataProvider } from '@aave/contract-helpers';
-import { AaveV3Ethereum, AaveV3Polygon, AaveV3Base, AaveV3Arbitrum } from '@bgd-labs/aave-address-book';
+import { AaveV3Ethereum, AaveV3Polygon, AaveV3Base, AaveV3Arbitrum, AaveV3Gnosis, AaveV3Optimism, AaveV3BNB } from '@bgd-labs/aave-address-book';
 import { ethers } from 'ethers';
 import { formatReserves } from '@aave/math-utils';
+import { CHAINS } from '../constants/chains.js';
 
 // Initialize providers and pool configurations
 const providers = {
@@ -10,6 +11,9 @@ const providers = {
     polygon: new ethers.providers.JsonRpcProvider(process.env.POL_RPC),
     base: new ethers.providers.JsonRpcProvider(process.env.BASE_RPC),
     arbitrum: new ethers.providers.JsonRpcProvider(process.env.ARBITRUM_RPC),
+    gnosis: new ethers.providers.JsonRpcProvider(process.env.GNOSIS_RPC),
+    optimism: new ethers.providers.JsonRpcProvider(process.env.OPTIMISM_RPC),
+    bnb: new ethers.providers.JsonRpcProvider(process.env.BNB_RPC),
 };
 
 const poolDataConfigs = {
@@ -17,9 +21,12 @@ const poolDataConfigs = {
     polygon: AaveV3Polygon,
     base: AaveV3Base,
     arbitrum: AaveV3Arbitrum,
+    gnosis: AaveV3Gnosis,
+    optimism: AaveV3Optimism,
+    bnb: AaveV3BNB
 };
 
-async function fetchRatesForChain(chain) {
+export async function fetchRatesForChain(chain) {
     const provider = providers[chain];
     const config = poolDataConfigs[chain];
 
@@ -58,10 +65,9 @@ async function fetchRatesForChain(chain) {
 }
 
 export async function fetchAllRates() {
-    const chains = ['ethereum', 'polygon', 'base', 'arbitrum'];
     const results = {};
 
-    for (const chain of chains) {
+    for (const chain of Object.values(CHAINS)) {
         results[chain] = await fetchRatesForChain(chain);
     }
 
