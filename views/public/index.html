@@ -187,7 +187,7 @@
             document.getElementById('data').classList.add('hidden');
 
             try {
-                const response = await fetch('http://localhost:3000/rates');
+                const response = await fetch('/rates');
                 apyData = await response.json();
 
                 // Populate tables
