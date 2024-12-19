@@ -127,6 +127,34 @@
                     </div>
                 </div>
 
+                <!-- USDT Table -->
+                <div class="text-center mb-8">
+                    <h3 class="text-xl font-semibold mb-3 text-gray-900 flex items-center justify-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><path fill="currentColor" d="M16 0c8.837 0 16 7.163 16 16s-7.163 16-16 16S0 24.837 0 16S7.163 0 16 0m-.171 8H9.277v5.194H7v1.861h2.277v1.953H7v1.86h2.277V24h6.552c3.94 0 6.938-2.095 8.091-5.131H26v-1.86h-1.624q.06-.496.06-1.01v-.046q0-.457-.047-.898H26v-1.86h-2.041C22.835 10.114 19.814 8 15.829 8m6.084 10.869c-1.007 2.075-3.171 3.462-6.084 3.462h-4.72v-3.462zm.564-3.814q.064.46.064.944v.045q0 .493-.067.964H11.108v-1.953h11.37zM15.83 9.666c2.926 0 5.097 1.424 6.098 3.528h-10.82V9.666h4.72z"/></svg>
+                        DAI Stablecoin
+                    </h3>
+                    <div class="lg:w-2/3 w-full mx-auto overflow-auto">
+                        <table class="table-auto w-full text-left whitespace-no-wrap">
+                            <thead>
+                                <tr>
+                                    <th
+                                        class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100 rounded-tl rounded-bl">
+                                        Chain</th>
+                                    <th
+                                        class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">
+                                        Supply APY</th>
+                                    <th
+                                        class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100 rounded-tr rounded-br">
+                                        Borrow APY</th>
+                                </tr>
+                            </thead>
+                            <tbody id="dai-table">
+                                <!-- DAI table rows will be dynamically added here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
                 <!-- WETH Table -->
                 <div class="text-center mb-8">
                     <h3 class="text-xl font-semibold mb-3 text-gray-900 flex items-center justify-center gap-2">
@@ -194,6 +222,7 @@
                 populateTable('USDC');
                 populateTable('USDT');
                 populateTable('WETH');
+                populateTable('DAI');
 
                 // Populate the highest Supply APY table
                 populateHighestSupplyAPY();
@@ -228,7 +257,7 @@
             const tableBody = document.querySelector('#highest-apy-table');
             tableBody.innerHTML = '';
 
-            const tokens = ['USDC', 'USDT', 'WETH'];
+            const tokens = ['USDC', 'USDT', 'WETH', 'DAI'];
             tokens.forEach(token => {
                 let highestAPY = 0;
                 let highestChain = '';

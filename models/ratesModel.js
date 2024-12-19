@@ -52,7 +52,8 @@ export async function fetchRatesForChain(chain) {
     const USDTokens = formattedPoolReserves.filter((token) =>
         token.name === "Wrapped Ether" ||
         token.name === "USD Coin" ||
-        token.name === "Tether USD"
+        token.name === "Tether USD" ||
+        token.name === "Dai Stablecoin"
     );
 
     return USDTokens.map((token) => ({
