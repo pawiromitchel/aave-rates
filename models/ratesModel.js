@@ -5,6 +5,10 @@ import { ethers } from 'ethers';
 import { formatReserves } from '@aave/math-utils';
 import { CHAINS } from '../constants/chains.js';
 
+// In-memory cache
+const CACHE = {};
+const CACHE_THRESHOLD = process.env.CACHE_THRESHOLD * 60 * 1000;
+
 // Initialize providers and pool configurations
 const providers = {
     ethereum: new ethers.providers.JsonRpcProvider(process.env.ETH_RPC),
@@ -67,9 +71,25 @@ export async function fetchRatesForChain(chain) {
 
 export async function fetchAllRates() {
     const results = {};
+    const currentTime = Date.now();
 
     for (const chain of Object.values(CHAINS)) {
-        results[chain] = await fetchRatesForChain(chain);
+        // Check if the chain data exists in the cache and is within the threshold
+        if (CACHE[chain] && currentTime - CACHE[chain].timestamp < CACHE_THRESHOLD) {
+            console.log(`Using cached data for ${chain}`);
+            results[chain] = CACHE[chain].data;
+        } else {
+            // Fetch fresh data if not in cache or cache is stale
+            console.log(`Fetching fresh data for ${chain}`);
+            const data = await fetchRatesForChain(chain);
+            results[chain] = data;
+
+            // Update the cache
+            CACHE[chain] = {
+                data,
+                timestamp: currentTime,
+            };
+        }
     }
 
     return results;
