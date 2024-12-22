@@ -3,6 +3,7 @@ import fastifyStatic from '@fastify/static';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import ratesRoutes from './routes/ratesRoutes.js';
+import { fetchAndInsertRates } from './database/database.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -24,10 +25,13 @@ fastify.get('/', async (request, reply) => {
     return reply.sendFile('index.html');
 });
 
+// Fetch and insert rates
+setInterval(fetchAndInsertRates, process.env.FETCH_INTERVAL * 60 * 1000);
+
 // Start the server
 const start = async () => {
     try {
-        await fastify.listen({ port: 3000 });
+        await fastify.listen({ port: process.env.PORT });
         console.log('Server is running at http://localhost:3000');
     } catch (err) {
         fastify.log.error(err);
