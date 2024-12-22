@@ -57,7 +57,9 @@ export async function fetchRatesForChain(chain) {
         token.name === "Wrapped Ether" ||
         token.name === "USD Coin" ||
         token.name === "Tether USD" ||
-        token.name === "Dai Stablecoin"
+        token.name === "Dai Stablecoin" ||
+        token.name === "USD//C on xDai" ||
+        token.name === "Wrapped Ether on xDai"
     );
 
     return USDTokens.map((token) => ({
