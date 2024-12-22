@@ -20,9 +20,9 @@ export const fetchAndInsertRates = async () => {
     }
 };
 
-export function getAllRatesfromDb() {
+export function getAllRatesfromDb(symbol) {
     return new Promise((resolve, reject) => {
-        db.all('SELECT * FROM rates', (error, rows) => {
+        db.all('SELECT * FROM rates where symbol = ?', [symbol.toUpperCase()], (error, rows) => {
             if (error) {
                 return reject(error);
             }

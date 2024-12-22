@@ -1,5 +1,6 @@
 // controllers/ratesController.js
 import { CHAINS } from '../constants/chains.js';
+import { getAllRatesfromDb } from '../models/databaseModel.js';
 import { fetchAllRates, fetchRatesForChain } from '../models/ratesModel.js';
 
 export const getRates = async (request, reply) => {
@@ -13,6 +14,20 @@ export const getRates = async (request, reply) => {
         });
     }
 };
+
+export const getDbRates = async (request, reply) => {
+    try {
+        const { symbol } = request.params;  // Get the chain from the URL parameter
+
+        const rates = await getAllRatesfromDb(symbol);
+        return reply.code(200).send(rates);
+    } catch (error) {
+        return reply.code(500).send({
+            error: 'Failed to fetch rates',
+            details: error.message,
+        });
+    }
+}
 
 export const getRatesForSpecificChain = async (request, reply) => {
     try {
