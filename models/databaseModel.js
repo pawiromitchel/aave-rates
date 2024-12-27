@@ -1,3 +1,4 @@
+import { CHAINS } from "../constants/chains.js";
 import { db } from "../database/database.js";
 import { fetchAllRates } from "./ratesModel.js";
 
@@ -9,7 +10,11 @@ export const fetchAndInsertRates = async () => {
         Object.entries(rates).forEach(([chain, chainRates]) => {
             console.log('inserting rates for', chain);
             console.log(chainRates);
-            chainRates.forEach(rate => {
+            chainRates.forEach((rate, index) => {
+                if(chain === CHAINS.OPTIMISM && index == 1) {
+                    console.log('skipping optimism USDC duplicate');
+                    return;
+                }
                 db.run('INSERT INTO rates (chain, name, symbol, supplyAPY, borrowAPY) VALUES (?, ?, ?, ?, ?)', [rate.chain, rate.name, rate.symbol, rate.supplyAPY, rate.variableBorrowAPY])
             });
         });
@@ -20,9 +25,9 @@ export const fetchAndInsertRates = async () => {
     }
 };
 
-export function getAllRatesfromDb() {
+export function getAllRatesfromDbBySymbol(symbol) {
     return new Promise((resolve, reject) => {
-        db.all('SELECT * FROM rates', (error, rows) => {
+        db.all('SELECT * FROM rates WHERE symbol = ?', [symbol.toUpperCase()], (error, rows) => {
             if (error) {
                 return reject(error);
             }

@@ -53,7 +53,7 @@ export async function fetchRatesForChain(chain) {
         marketReferencePriceInUsd: baseCurrencyData.marketReferenceCurrencyPriceInUsd,
     });
 
-    const USDTokens = formattedPoolReserves.filter((token) =>
+    const tokens = formattedPoolReserves.filter((token) =>
         token.name === "Wrapped Ether" ||
         token.name === "USD Coin" ||
         token.name === "Tether USD" ||
@@ -62,7 +62,7 @@ export async function fetchRatesForChain(chain) {
         token.name === "Wrapped Ether on xDai"
     );
 
-    return USDTokens.map((token) => ({
+    return tokens.map((token) => ({
         chain: chain,
         name: token.name,
         symbol: token.symbol,
