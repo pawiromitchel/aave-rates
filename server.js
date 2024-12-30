@@ -26,7 +26,7 @@ fastify.get('/', async (request, reply) => {
 });
 
 // Fetch and insert rates
-setInterval(fetchAndInsertRates, process.env.FETCH_INTERVAL * 60 * 1000);
+// setInterval(fetchAndInsertRates, process.env.FETCH_INTERVAL * 60 * 1000);
 
 // Start the server
 const start = async () => {
